@@ -19,6 +19,23 @@ A responsive, full-screen interactive almanac built with **HTML5**, **Tailwind C
 - **Typography:** Google Fonts (Oswald & Roboto Condensed)
 - **Logic:** Vanilla JavaScript (ES6+) utilizing astronomical algorithms for moon and tide data.
 
+## 📸 Screenshots
+
+### Desktop View (Wide)
+
+<img src="https://github.com/user-attachments/assets/59def54f-f595-4b43-986e-bb6c606ea33d" alt="Desktop Light Theme">
+<img src="https://github.com/user-attachments/assets/90a195e8-c037-4919-9ac5-181ee9555cda" alt="Desktop Dark Theme">
+
+### Mobile View (Responsive)
+
+<img src="https://github.com/user-attachments/assets/2353fb3d-663f-482c-b71c-60835e46b190" alt="Mobile Light Theme">
+<img src="https://github.com/user-attachments/assets/a44df55f-b70c-42a5-bf75-7a1a7e1d1c46" alt="Mobile Dark Theme">
+
+### Print Preview
+
+<img src="https://github.com/user-attachments/assets/d347fb71-b5c8-460b-9da7-a428a304314e" alt="Print Light Theme">
+<img src="https://github.com/user-attachments/assets/87dfe530-630c-42a9-a01d-8ce6fc156067" alt="Print Dark Theme">
+
 ## 🚀 Getting Started
 
 1. **Clone the repository:**
