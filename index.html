@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commercial Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+        /* Essential reset to prevent scrolling and overlap */
+        body { font-family: 'Roboto Condensed', sans-serif; height: 100vh; overflow: hidden; margin: 0; padding: 0; }
+        .almanac-header { font-family: 'Oswald', sans-serif; line-height: 1; }
+        
+        .calendar-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            background: white;
+        }
+
+        /* --- ACCURATE PRINT LOGIC --- */
+        @media print {
+            @page { size: landscape; margin: 0; }
+            body, html { height: 100%; width: 100%; overflow: visible; }
+            .no-print { display: none !important; }
+            .calendar-wrapper { 
+                height: 100vh !important; 
+                width: 100vw !important; 
+                position: absolute; 
+                top: 0; left: 0; 
+                border: 2px solid #1e3a8a !important;
+            }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        /* --- DYNAMIC SCALING FOR MOBILE --- */
+        @media (max-width: 640px) {
+            #header-month { font-size: clamp(2rem, 10vw, 5rem) !important; }
+            #header-day, #header-year { font-size: clamp(1.5rem, 8vw, 4rem) !important; }
+            .day-number { font-size: 3.5vh !important; }
+            .tide-text { font-size: 0.6vh !important; opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-slate-200 dark:bg-slate-950">
+
+    <div class="calendar-wrapper dark:bg-slate-900 border-[6px] md:border-[10px] border-blue-900 dark:border-blue-700">
+        
+        <div class="no-print flex flex-wrap items-center justify-between bg-white dark:bg-slate-800 px-3 min-h-[7vh] border-b-2 border-gray-200 dark:border-slate-700">
+            <div class="flex items-center gap-2 md:gap-4 order-1">
+                <button onclick="changeMonth(-1)" class="text-xl md:text-2xl font-bold text-gray-400 hover:text-blue-900">❮</button>
+                <h1 id="calendar-title" class="text-xs md:text-lg font-black text-red-600 uppercase italic">JANUARY 2026</h1>
+                <button onclick="changeMonth(1)" class="text-xl md:text-2xl font-bold text-gray-400 hover:text-blue-900">❯</button>
+            </div>
+
+            <div class="flex items-center justify-center order-3 w-full md:w-auto md:order-2 py-1 md:py-0">
+                <a href="https://github.com/Nathaniel1024" target="_blank" class="flex items-center gap-2">
+                    <svg class="w-5 h-5 md:w-7 md:h-7 fill-blue-900 dark:fill-blue-400" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <span class="text-[10px] md:text-sm font-bold text-blue-900 dark:text-blue-400">Nathaniel1024</span>
+                </a>
+            </div>
+
+            <div class="flex items-center gap-2 order-2 md:order-3">
+                <button onclick="window.print()" class="bg-blue-900 text-white px-2 py-1 rounded text-xs font-bold">Print</button>
+                <button onclick="toggleTheme()" id="theme-icon" class="text-xl">🌙</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 h-[12vh] md:h-[15vh] border-b-4 border-blue-900 dark:border-blue-700">
+            <div id="header-day" class="col-span-3 sm:col-span-2 bg-blue-900 text-white text-[5vh] md:text-[8vh] flex items-center justify-center border-r-2 md:border-r-4 border-white almanac-header">28</div>
+            <div id="header-month" class="col-span-6 sm:col-span-8 bg-red-600 text-white text-[5vh] md:text-[10vh] flex items-center justify-center almanac-header uppercase italic text-center px-1 leading-none">JANUARY</div>
+            <div id="header-year" class="col-span-3 sm:col-span-2 bg-blue-900 text-white text-[3vh] md:text-[6vh] flex items-center justify-center border-l-2 md:border-l-4 border-white almanac-header">2026</div>
+        </div>
+
+        <div class="grid grid-cols-7 text-center bg-blue-900 text-white font-black h-[5vh] text-[1.5vh] md:text-[2vh] italic uppercase border-b-2 border-blue-900">
+            <div class="flex items-center justify-center bg-red-600 border-r border-white/20">Sun</div>
+            <div class="flex items-center justify-center border-r border-white/20">Mon</div>
+            <div class="flex items-center justify-center border-r border-white/20">Tue</div>
+            <div class="flex items-center justify-center border-r border-white/20">Wed</div>
+            <div class="flex items-center justify-center border-r border-white/20">Thu</div>
+            <div class="flex items-center justify-center border-r border-white/20">Fri</div>
+            <div class="flex items-center justify-center">Sat</div>
+        </div>
+
+        <div id="calendar-grid" class="flex-grow grid grid-cols-7 bg-white dark:bg-slate-900 overflow-hidden"></div>
+    </div>
+
+    <script>
+        let currentDate = new Date();
+        const holidays = { "1-1": "New Year", "12-25": "Christmas" };
+
+        function getMoonPhase(y, m, d) {
+            let c = e = jd = b = 0; if (m < 3) { y--; m += 12; } m++;
+            c = 365.25 * y; e = 30.6 * m; jd = c + e + d - 694039.09; jd /= 29.5305882;
+            b = parseInt(jd); jd -= b; return ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"][Math.round(jd * 8) % 8];
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            document.getElementById('theme-icon').innerText = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const hDay = document.getElementById('header-day');
+            const hMonth = document.getElementById('header-month');
+            const hYear = document.getElementById('header-year');
+            const title = document.getElementById('calendar-title');
+
+            grid.innerHTML = '';
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            title.innerText = `${monthNames[month].toUpperCase()} ${year}`;
+            hDay.innerText = String(new Date().getDate()).padStart(2, '0');
+            hMonth.innerText = monthNames[month];
+            hYear.innerText = year;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+            for (let i = 0; i < totalCells; i++) {
+                const dayNum = i - firstDay + 1;
+                const cell = document.createElement('div');
+                cell.className = `border-b border-r border-blue-900/30 dark:border-blue-700/50 relative flex flex-col items-center justify-center`;
+
+                if (dayNum > 0 && dayNum <= daysInMonth) {
+                    const isSun = (i % 7 === 0);
+                    const isToday = dayNum === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
+                    
+                    cell.innerHTML = `
+                        <div class="absolute top-0.5 left-0.5 md:top-1 md:left-1 flex flex-col leading-none">
+                            <span class="text-[1.2vh] md:text-[1.8vh]">${getMoonPhase(year, month, dayNum)}</span>
+                            ${holidays[`${month + 1}-${dayNum}`] ? `<span class="text-[0.7vh] bg-red-600 text-white px-1 font-bold">HOLIDAY</span>` : ''}
+                        </div>
+                        <span class="day-number ${isSun ? 'text-red-600' : 'text-blue-900 dark:text-blue-300'} text-[4vh] md:text-[6vh] font-black italic 
+                            ${isToday ? 'outline outline-[0.3vh] outline-yellow-400 rounded-full px-1 md:px-2' : ''}">
+                            ${dayNum}
+                        </span>
+                        <div class="tide-text absolute bottom-0.5 w-full text-center opacity-30">
+                            <span class="text-[0.8vh] font-bold uppercase">H: 2.1m | L: 0.3m</span>
+                        </div>
+                    `;
+                } else {
+                    cell.className += " bg-gray-50/50 dark:bg-slate-800/20";
+                }
+                grid.appendChild(cell);
+            }
+        }
+
+        window.onresize = renderCalendar;
+        changeMonth(0);
+        function changeMonth(s) { currentDate.setMonth(currentDate.getMonth() + s); renderCalendar(); }
+    </script>
+</body>
+</html>
